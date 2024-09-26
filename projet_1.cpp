@@ -49,6 +49,21 @@ IntMatrix blockMultiplication(const IntMatrix& A, const IntMatrix& B, int blockS
 }
 
 
+// Algorithme 4 : Multiplication par blocs reordonnée
+IntMatrix blockReorderedMultiplication(const IntMatrix& A, const IntMatrix& B, int blockSize) {
+    int n = A.rows();
+    IntMatrix C(n, n);
+    C.setZero(); // Initialize matrix C with zeros
+    for (int ii = 0; ii < n; ii += blockSize)
+        for (int kk = 0; kk < n; kk += blockSize)
+            for (int jj = 0; jj < n; jj += blockSize)
+                for (int i = ii; i < min(ii + blockSize, n); ++i)
+                    for (int k = kk; k < min(kk + blockSize, n); ++k)
+                        for (int j = jj; j < min(jj + blockSize, n); ++j)
+                            C(i, j) += A(i, k) * B(k, j);
+    return C;
+}
+
 // Algorithme 5 : Multiplication avec la bibliothèque Eigen
 MatrixXd eigenMultiplication(const MatrixXd& A, const MatrixXd& B) {
     return A * B;
@@ -341,6 +356,7 @@ int main() {
     IntMatrix C1 = naiveMultiplication(A, B);
     IntMatrix C2 = naiveReorderedMultiplication(A, B);
     IntMatrix C3 = blockMultiplication(A, B, 2);
+    IntMatrix C3_2 = blockReorderedMultiplication(A, B, 2);
 
     MatrixXd A_double = A.cast<double>();
     MatrixXd B_double = B.cast<double>();
@@ -362,6 +378,8 @@ int main() {
     printMatrix(C2);
     cout << "Resultado de la multiplicacion division por bloques:" << endl;
     printMatrix(C3);
+    cout << "Resultado de la multiplicacion division por bloques reordenado:" << endl;
+    printMatrix(C3_2);
     cout << "Resultado de la multiplicacion con Eigen:" << endl;
     cout << C4 << endl;
     cout << "Resultado de la multiplicacion con Strassen:" << endl;
