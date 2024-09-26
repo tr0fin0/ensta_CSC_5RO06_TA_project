@@ -174,162 +174,6 @@ void multiplyMatrixStrassen(const IntMatrix& A, const IntMatrix& B, IntMatrix& C
 
 
 
-// Algoritmo BCRL para multiplicación de matrices
-void multiplyMatrixBCRL(const MatrixXi& A, const MatrixXi& B, MatrixXi& C) {
-    int n = A.rows();
-    if (n == 1) {
-        C(0, 0) = A(0, 0) * B(0, 0);
-        return;
-    }
-
-    int newSize = n / 2;
-    MatrixXi A11 = A.topLeftCorner(newSize, newSize);
-    MatrixXi A12 = A.topRightCorner(newSize, newSize);
-    MatrixXi A21 = A.bottomLeftCorner(newSize, newSize);
-    MatrixXi A22 = A.bottomRightCorner(newSize, newSize);
-
-    MatrixXi B11 = B.topLeftCorner(newSize, newSize);
-    MatrixXi B12 = B.topRightCorner(newSize, newSize);
-    MatrixXi B21 = B.bottomLeftCorner(newSize, newSize);
-    MatrixXi B22 = B.bottomRightCorner(newSize, newSize);
-
-    MatrixXi P1(newSize, newSize);
-    MatrixXi P2(newSize, newSize);
-    MatrixXi P3(newSize, newSize);
-    MatrixXi P4(newSize, newSize);
-    MatrixXi P5(newSize, newSize);
-    MatrixXi P6(newSize, newSize);
-    MatrixXi P7(newSize, newSize);
-
-    // P1 = A11 * (B12 - B22)
-    MatrixXi B12minusB22 = B12 - B22;
-    multiplyMatrixBCRL(A11, B12minusB22, P1);
-
-    // P2 = (A11 + A12) * B22
-    MatrixXi A11plusA12 = A11 + A12;
-    multiplyMatrixBCRL(A11plusA12, B22, P2);
-
-    // P3 = (A21 + A22) * B11
-    MatrixXi A21plusA22 = A21 + A22;
-    multiplyMatrixBCRL(A21plusA22, B11, P3);
-
-    // P4 = A22 * (B21 - B11)
-    MatrixXi B21minusB11 = B21 - B11;
-    multiplyMatrixBCRL(A22, B21minusB11, P4);
-
-    // P5 = (A11 + A22) * (B11 + B22)
-    MatrixXi A11plusA22 = A11 + A22;
-    MatrixXi B11plusB22 = B11 + B22;
-    multiplyMatrixBCRL(A11plusA22, B11plusB22, P5);
-
-    // P6 = (A12 - A22) * (B21 + B22)
-    MatrixXi A12minusA22 = A12 - A22;
-    MatrixXi B21plusB22 = B21 + B22;
-    multiplyMatrixBCRL(A12minusA22, B21plusB22, P6);
-
-    // P7 = (A11 - A21) * (B11 + B12)
-    MatrixXi A11minusA21 = A11 - A21;
-    MatrixXi B11plusB12 = B11 + B12;
-    multiplyMatrixBCRL(A11minusA21, B11plusB12, P7);
-
-    // C11 = P5 + P4 - P2 + P6
-    MatrixXi C11 = P5 + P4 - P2 + P6;
-
-    // C12 = P1 + P2
-    MatrixXi C12 = P1 + P2;
-
-    // C21 = P3 + P4
-    MatrixXi C21 = P3 + P4;
-
-    // C22 = P5 + P1 - P3 - P7
-    MatrixXi C22 = P5 + P1 - P3 - P7;
-
-    // Combinar submatrices en C
-    C.topLeftCorner(newSize, newSize) = C11;
-    C.topRightCorner(newSize, newSize) = C12;
-    C.bottomLeftCorner(newSize, newSize) = C21;
-    C.bottomRightCorner(newSize, newSize) = C22;
-}
-
-void multiplyMatrixPan(const MatrixXi& A, const MatrixXi& B, MatrixXi& C) {
-    int n = A.rows();
-    
-    if (n == 1) {
-        C(0, 0) = A(0, 0) * B(0, 0);
-        return;
-    }
-
-    int newSize = n / 2;
-    MatrixXi A11 = A.topLeftCorner(newSize, newSize);
-    MatrixXi A12 = A.topRightCorner(newSize, newSize);
-    MatrixXi A21 = A.bottomLeftCorner(newSize, newSize);
-    MatrixXi A22 = A.bottomRightCorner(newSize, newSize);
-
-    MatrixXi B11 = B.topLeftCorner(newSize, newSize);
-    MatrixXi B12 = B.topRightCorner(newSize, newSize);
-    MatrixXi B21 = B.bottomLeftCorner(newSize, newSize);
-    MatrixXi B22 = B.bottomRightCorner(newSize, newSize);
-
-    MatrixXi P1(newSize, newSize);
-    MatrixXi P2(newSize, newSize);
-    MatrixXi P3(newSize, newSize);
-    MatrixXi P4(newSize, newSize);
-    MatrixXi P5(newSize, newSize);
-    MatrixXi P6(newSize, newSize);
-    MatrixXi P7(newSize, newSize);
-
-    MatrixXi temp1(newSize, newSize);
-    MatrixXi temp2(newSize, newSize);
-
-    // P1 = (A11 + A22) * (B11 + B22)
-    temp1 = A11 + A22;
-    temp2 = B11 + B22;
-    multiplyMatrixPan(temp1, temp2, P1);
-
-    // P2 = (A21 + A22) * B11
-    temp1 = A21 + A22;
-    multiplyMatrixPan(temp1, B11, P2);
-
-    // P3 = A11 * (B12 - B22)
-    temp1 = B12 - B22;
-    multiplyMatrixPan(A11, temp1, P3);
-
-    // P4 = A22 * (B21 - B11)
-    temp1 = B21 - B11;
-    multiplyMatrixPan(A22, temp1, P4);
-
-    // P5 = (A11 + A12) * B22
-    temp1 = A11 + A12;
-    multiplyMatrixPan(temp1, B22, P5);
-
-    // P6 = (A21 - A11) * (B11 + B12)
-    temp1 = A21 - A11;
-    temp2 = B11 + B12;
-    multiplyMatrixPan(temp1, temp2, P6);
-
-    // P7 = (A12 - A22) * (B21 + B22)
-    temp1 = A12 - A22;
-    temp2 = B21 + B22;
-    multiplyMatrixPan(temp1, temp2, P7);
-
-    // C11 = P1 + P4 - P5 + P7
-    MatrixXi C11 = P1 + P4 - P5 + P7;
-
-    // C12 = P3 + P5
-    MatrixXi C12 = P3 + P5;
-
-    // C21 = P2 + P4
-    MatrixXi C21 = P2 + P4;
-
-    // C22 = P1 + P3 - P2 + P6
-    MatrixXi C22 = P1 + P3 - P2 + P6;
-
-    // Combinar submatrices en C
-    C.topLeftCorner(newSize, newSize) = C11;
-    C.topRightCorner(newSize, newSize) = C12;
-    C.bottomLeftCorner(newSize, newSize) = C21;
-    C.bottomRightCorner(newSize, newSize) = C22;
-}
 
 void printMatrix(const IntMatrix& matrix) {
     for (int i = 0; i < matrix.rows(); ++i) {
@@ -349,8 +193,6 @@ int main() {
     IntMatrix A = IntMatrix::NullaryExpr(n, n, []() { return rand() % 10 + 1; });
     IntMatrix B = IntMatrix::NullaryExpr(n, n, []() { return rand() % 10 + 1; });
     IntMatrix C5(n, n);
-    IntMatrix C6(n, n);
-    IntMatrix C7(n, n);
 
     // Naive multiplication
     IntMatrix C1 = naiveMultiplication(A, B);
@@ -364,8 +206,6 @@ int main() {
 
     // Strassen multiplication
     multiplyMatrixStrassen(A, B, C5, n);
-    multiplyMatrixBCRL(A, B, C6);
-    multiplyMatrixPan(A, B, C7);
 
     cout << "A:" << endl;
     printMatrix(A);
@@ -384,10 +224,6 @@ int main() {
     cout << C4 << endl;
     cout << "Resultado de la multiplicacion con Strassen:" << endl;
     printMatrix(C5);
-    cout << "Resultado de la multiplicacion con BCRL:" << endl;
-    printMatrix(C6);
-    cout << "Resultado de la multiplicacion con PAN:" << endl;
-    printMatrix(C7);
 
     return 0;
 }
