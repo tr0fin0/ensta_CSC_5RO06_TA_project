@@ -64,10 +64,6 @@ IntMatrix blockReorderedMultiplication(const IntMatrix& A, const IntMatrix& B, i
     return C;
 }
 
-// Algorithme 5 : Multiplication avec la bibliothèque Eigen
-MatrixXd eigenMultiplication(const MatrixXd& A, const MatrixXd& B) {
-    return A * B;
-}
 
 
 // Función para sumar matrices de tipo IntMatrix
