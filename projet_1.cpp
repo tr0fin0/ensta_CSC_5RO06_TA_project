@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
 
 using namespace std;
 using namespace Eigen;
@@ -64,6 +65,10 @@ IntMatrix blockReorderedMultiplication(const IntMatrix& A, const IntMatrix& B, i
     return C;
 }
 
+// Algorithme 5 : Multiplication avec la bibliothèque Eigen
+MatrixXd eigenMultiplication(const MatrixXd& A, const MatrixXd& B) {
+    return A * B;
+}
 
 
 // Función para sumar matrices de tipo IntMatrix
@@ -168,9 +173,6 @@ void multiplyMatrixStrassen(const IntMatrix& A, const IntMatrix& B, IntMatrix& C
     C.bottomRightCorner(newSize, newSize) = C22;
 }
 
-
-
-
 void printMatrix(const IntMatrix& matrix) {
     for (int i = 0; i < matrix.rows(); ++i) {
         for (int j = 0; j < matrix.cols(); ++j) {
@@ -180,46 +182,79 @@ void printMatrix(const IntMatrix& matrix) {
     }
 }
 
+bool compareMatrices(const IntMatrix& A, const IntMatrix& B) {
+    return A == B; // Check if the matrices are approximately equal
+}
+
 
 int main() {
-    int n = 8; //Para Strassen hay que usar matrices de tamaño 2^n
-    srand(time(0)); // Initialize the seed for random numbers
+    vector<int> sizes = {8, 64, 256, 512, 1024};
 
-    // Generate random numbers between 1 and 10
-    IntMatrix A = IntMatrix::NullaryExpr(n, n, []() { return rand() % 10 + 1; });
-    IntMatrix B = IntMatrix::NullaryExpr(n, n, []() { return rand() % 10 + 1; });
-    IntMatrix C5(n, n);
+    for (int n : sizes) {
+        cout << "Ejecutando para n = " << n << endl;
 
-    // Naive multiplication
-    IntMatrix C1 = naiveMultiplication(A, B);
-    IntMatrix C2 = naiveReorderedMultiplication(A, B);
-    IntMatrix C3 = blockMultiplication(A, B, 2);
-    IntMatrix C3_2 = blockReorderedMultiplication(A, B, 2);
+        srand(time(0)); // Initialize the seed for random numbers
 
-    MatrixXd A_double = A.cast<double>();
-    MatrixXd B_double = B.cast<double>();
-    MatrixXd C4 = eigenMultiplication(A_double, B_double);
+        // Generate random numbers between 1 and 10
+        IntMatrix A = IntMatrix::NullaryExpr(n, n, []() { return rand() % 10 + 1; });
+        IntMatrix B = IntMatrix::NullaryExpr(n, n, []() { return rand() % 10 + 1; });
+        IntMatrix C5(n, n);
 
-    // Strassen multiplication
-    multiplyMatrixStrassen(A, B, C5, n);
+        // Naive multiplication
+        auto start = chrono::high_resolution_clock::now();
+        IntMatrix C1 = naiveMultiplication(A, B);
+        auto end = chrono::high_resolution_clock::now();
+        chrono::duration<double> elapsed = end - start;
+        cout << "Tiempo de ejecucion de la multiplicacion naive: " << elapsed.count() << " segundos" << endl;
 
-    cout << "A:" << endl;
-    printMatrix(A);
-    cout << "B:" << endl;
-    printMatrix(B);
-    
-    cout << "Resultado de la multiplicacion naive:" << endl;
-    printMatrix(C1);
-    cout << "Resultado de la multiplicacion naive reordenada:" << endl;
-    printMatrix(C2);
-    cout << "Resultado de la multiplicacion division por bloques:" << endl;
-    printMatrix(C3);
-    cout << "Resultado de la multiplicacion division por bloques reordenado:" << endl;
-    printMatrix(C3_2);
-    cout << "Resultado de la multiplicacion con Eigen:" << endl;
-    cout << C4 << endl;
-    cout << "Resultado de la multiplicacion con Strassen:" << endl;
-    printMatrix(C5);
+        // Naive reordered multiplication
+        start = chrono::high_resolution_clock::now();
+        IntMatrix C2 = naiveReorderedMultiplication(A, B);
+        end = chrono::high_resolution_clock::now();
+        elapsed = end - start;
+        cout << "Tiempo de ejecucion de la multiplicacion naive reordenada: " << elapsed.count() << " segundos" << endl;
+
+        // Block multiplication
+        start = chrono::high_resolution_clock::now();
+        IntMatrix C3 = blockMultiplication(A, B, 2);
+        end = chrono::high_resolution_clock::now();
+        elapsed = end - start;
+        cout << "Tiempo de ejecucion de la multiplicacion por bloques: " << elapsed.count() << " segundos" << endl;
+
+        // Block reordered multiplication
+        start = chrono::high_resolution_clock::now();
+        IntMatrix C3_2 = blockReorderedMultiplication(A, B, 2);
+        end = chrono::high_resolution_clock::now();
+        elapsed = end - start;
+        cout << "Tiempo de ejecucion de la multiplicacion por bloques reordenada: " << elapsed.count() << " segundos" << endl;
+
+        // Eigen multiplication
+        MatrixXd A_double = A.cast<double>();
+        MatrixXd B_double = B.cast<double>();
+        start = chrono::high_resolution_clock::now();
+        MatrixXd C4_double = eigenMultiplication(A_double, B_double);
+        end = chrono::high_resolution_clock::now();
+        elapsed = end - start;
+        cout << "Tiempo de ejecucion de la multiplicacion con Eigen: " << elapsed.count() << " segundos" << endl;
+        IntMatrix C4 = C4_double.cast<int>();
+
+        // Strassen multiplication
+        start = chrono::high_resolution_clock::now();
+        multiplyMatrixStrassen(A, B, C5, n);
+        end = chrono::high_resolution_clock::now();
+        elapsed = end - start;
+        cout << "Tiempo de ejecucion de la multiplicacion con Strassen: " << elapsed.count() << " segundos" << endl;
+        /*
+        // Comparar resultados con C1
+        cout << "Comparacion con C1:" << endl;
+        cout << "C2: " << (compareMatrices(C1, C2) ? "yes" : "no") << endl;
+        cout << "C3: " << (compareMatrices(C1, C3) ? "yes" : "no") << endl;
+        cout << "C3_2: " << (compareMatrices(C1, C3_2) ? "yes" : "no") << endl;
+        cout << "C4: " << (compareMatrices(C1, C4) ? "yes" : "no") << endl;
+        cout << "C5: " << (compareMatrices(C1, C5) ? "yes" : "no") << endl;
+        */
+        cout << endl;
+    }
 
     return 0;
 }
