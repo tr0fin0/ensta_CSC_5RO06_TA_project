@@ -4,13 +4,13 @@
 #include <cstdlib>
 
 
-void matrix_mult_naive(double A[SIZE][SIZE], double B[SIZE][SIZE], double C[SIZE][SIZE]){
+void matrix_mult_naive(int A[SIZE][SIZE], int B[SIZE][SIZE], int C[SIZE][SIZE]){
     int row, col, k;
 
     // naive matrix multiplication algorithm
     loop_mult_row: for(row = 0; row < SIZE; row++){
         loop_mult_col: for(col = 0; col < SIZE; col++){
-            double sum = 0;
+            int sum = 0;
             loop_mult_k: for(k = 0; k < SIZE; k++){
                 sum += A[row][k] * B[k][col];
             }
@@ -22,10 +22,10 @@ void matrix_mult_naive(double A[SIZE][SIZE], double B[SIZE][SIZE], double C[SIZE
 
 int main(){
     // matrix declaration
-    double A[SIZE][SIZE];    // input
-    double B[SIZE][SIZE];    // input
-    double C0[SIZE][SIZE];  // output naive calculation
-    double C[SIZE][SIZE];    // output
+    int A[SIZE][SIZE];    // input
+    int B[SIZE][SIZE];    // input
+    int C0[SIZE][SIZE];    // output naive calculation
+    int C[SIZE][SIZE];    // output
 
     // local variables
     int row, col, k;
@@ -34,8 +34,8 @@ int main(){
     // create A and B matrix
     loop_rand_row: for(row = 0; row < SIZE; row++){
         loop_rand_col: for(col = 0; col < SIZE; col++){
-            A[row][col] = rand()%10;
-            B[row][col] = rand()%10;
+            A[row][col] = rand() % 10 + 1;    // same definition as in software
+            B[row][col] = rand() % 10 + 1;
         }
     }
 
@@ -69,9 +69,19 @@ int main(){
     }
 
     // algorithm call, hardware execution
-    #ifdef solution1
+    #ifdef solution0    // int naive algorithm without optimizations
+        matrix_mult_0(input_stream, output_stream);
+    #endif
+    #ifdef solution1    // int naive algorithm with pipeline
         matrix_mult_1(input_stream, output_stream);
     #endif
+    #ifdef solution2    // int naive algorithm with pipeline
+        matrix_mult_2(input_stream, output_stream);
+    #endif
+    #ifdef solution3    // int naive algorithm with pipeline
+        matrix_mult_3(input_stream, output_stream);
+    #endif
+
 
 
     // stream data read

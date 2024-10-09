@@ -2,13 +2,8 @@
 #include <hls_stream.h>
 #include <ap_int.h>
 
-#define SIZE 8        // matrix size
-#define solution1     // active solution
-
 // define matrix data type
-#ifdef solution1
-typedef float matrix;
-#endif
+typedef int matrix;
 
 // define axis data structure
 struct axis{
@@ -16,4 +11,18 @@ struct axis{
     ap_uint<1> last;
 };
 
+#ifdef solution0
+void matrix_mult_0(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream);
+#endif
+
+#ifdef solution1
 void matrix_mult_1(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream);
+#endif
+
+#ifdef solution2
+void matrix_mult_2(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream);
+#endif
+
+#ifdef solution3
+void matrix_mult_3(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream);
+#endif
