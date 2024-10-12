@@ -1,3 +1,5 @@
+#include "m_matrixBase.h"
+
 #ifdef solution_naive
 #include "m_naive.h"
 #endif
