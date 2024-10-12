@@ -69,17 +69,17 @@ int main(){
     }
 
     // algorithm call, hardware execution
-    #ifdef solution0    // int naive algorithm without optimizations
-        matrix_mult_0(input_stream, output_stream);
+    #ifdef solution_0_0    // int naive algorithm without optimizations
+        matrix_mult_0_0(input_stream, output_stream);
     #endif
-    #ifdef solution1    // int naive algorithm with pipeline
-        matrix_mult_1(input_stream, output_stream);
+    #ifdef solution_0_1    // int naive algorithm with pipeline
+        matrix_mult_0_1(input_stream, output_stream);
     #endif
-    #ifdef solution2    // int naive algorithm with pipeline
-        matrix_mult_2(input_stream, output_stream);
+    #ifdef solution_0_2    // int naive algorithm with pipeline
+        matrix_mult_0_2(input_stream, output_stream);
     #endif
-    #ifdef solution3    // int naive algorithm with pipeline
-        matrix_mult_3(input_stream, output_stream);
+    #ifdef solution_0_3    // int naive algorithm with pipeline
+        matrix_mult_0_3(input_stream, output_stream);
     #endif
 
 

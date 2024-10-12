@@ -1,7 +1,7 @@
 #include "matrix_mult.h"
 
-#ifdef solution0
-void matrix_mult_0(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream){
+#ifdef solution_0_0
+void matrix_mult_0_0(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream){
     #pragma HLS INTERFACE ap_ctrl_none port=return                 // disable unwanted messages
     #pragma HLS INTERFACE axis register both port=output_stream    //
     #pragma HLS INTERFACE axis register both port=input_stream     //
@@ -59,8 +59,8 @@ void matrix_mult_0(hls::stream<axis> &input_stream, hls::stream<axis> &output_st
 #endif
 
 
-#ifdef solution1
-void matrix_mult_1(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream){
+#ifdef solution_0_1
+void matrix_mult_0_1(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream){
     #pragma HLS INTERFACE ap_ctrl_none port=return                 // disable unwanted messages
     #pragma HLS INTERFACE axis register both port=output_stream    //
     #pragma HLS INTERFACE axis register both port=input_stream     //
@@ -123,8 +123,8 @@ void matrix_mult_1(hls::stream<axis> &input_stream, hls::stream<axis> &output_st
 #endif
 
 
-#ifdef solution2
-void matrix_mult_2(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream){
+#ifdef solution_0_2
+void matrix_mult_0_2(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream){
     #pragma HLS INTERFACE ap_ctrl_none port=return                 // disable unwanted messages
     #pragma HLS INTERFACE axis register both port=output_stream    //
     #pragma HLS INTERFACE axis register both port=input_stream     //
@@ -189,8 +189,8 @@ void matrix_mult_2(hls::stream<axis> &input_stream, hls::stream<axis> &output_st
 #endif
 
 
-#ifdef solution3
-void matrix_mult_3(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream){
+#ifdef solution_0_3
+void matrix_mult_0_3(hls::stream<axis> &input_stream, hls::stream<axis> &output_stream){
     #pragma HLS INTERFACE ap_ctrl_none port=return                 // disable unwanted messages
     #pragma HLS INTERFACE axis register both port=output_stream    //
     #pragma HLS INTERFACE axis register both port=input_stream     //
