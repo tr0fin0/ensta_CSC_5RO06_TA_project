@@ -1,4 +1,5 @@
 #include "matrix_mult.h"
+//#include "reference.h"
 
 // benchmark is created to have a baseline to which compare the multiplication results
-void matrix_mult_naive(double A[SIZE][SIZE], double B[SIZE][SIZE], double C[SIZE][SIZE]);
+void matrix_mult_naive(int A[SIZE][SIZE], int B[SIZE][SIZE], int C[SIZE][SIZE]);
