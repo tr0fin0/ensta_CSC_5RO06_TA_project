@@ -52,6 +52,9 @@ void matrix_mult_0_0(hls::stream<axis> &input_stream, hls::stream<axis> &output_
                 data_axis.last = 1;
             else
                 data_axis.last = 0;
+            data_axis.keep = 15;
+            data_axis.strb = 15;
+
             output_stream.write(data_axis);
         }
     }
@@ -116,6 +119,9 @@ void matrix_mult_0_1(hls::stream<axis> &input_stream, hls::stream<axis> &output_
                 data_axis.last = 1;
             else
                 data_axis.last = 0;
+            data_axis.keep = 15;
+            data_axis.strb = 15;
+
             output_stream.write(data_axis);
         }
     }
@@ -182,6 +188,9 @@ void matrix_mult_0_2(hls::stream<axis> &input_stream, hls::stream<axis> &output_
                 data_axis.last = 1;
             else
                 data_axis.last = 0;
+            data_axis.keep = 15;
+            data_axis.strb = 15;
+
             output_stream.write(data_axis);
         }
     }
@@ -248,6 +257,9 @@ void matrix_mult_0_3(hls::stream<axis> &input_stream, hls::stream<axis> &output_
                 data_axis.last = 1;
             else
                 data_axis.last = 0;
+            data_axis.keep = 15;
+            data_axis.strb = 15;
+
             output_stream.write(data_axis);
         }
     }
